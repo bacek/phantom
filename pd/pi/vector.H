@@ -13,9 +13,9 @@
 template<typename x_t>
 typename x_t::template _ptr_t<x_t> calc_ptr_type(x_t &);
 
-#define for_each(p, some) for(typeof(calc_ptr_type(some)) p = (some); p; ++p)
+#define for_each(p, some) for(decltype(calc_ptr_type(some)) p = (some); p; ++p)
 
-#define for_each_next(p, p0) for(typeof(p0) p = p0; ++p;)
+#define for_each_next(p, p0) for(decltype(p0) p = p0; ++p;)
 
 namespace pd {
 

@@ -64,7 +64,7 @@ public:
 		inline ~config_t() throw() { }
 
 		inline void check(in_t::ptr_t const &) const {
-			for(typeof(list._ptr()) lptr = list; lptr; ++lptr) {
+			for(decltype(list._ptr()) lptr = list; lptr; ++lptr) {
 				name_t const &name = lptr.val();
 
 				// #dir "/mod_" #name ".so\0"

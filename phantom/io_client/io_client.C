@@ -107,14 +107,14 @@ io_client_t::io_client_t(string_t const &name, config_t const &config) :
 	io_t(name, config), proto(*config.proto), pools() {
 
 	size_t size = 0;
-	for(typeof(config.links._ptr()) ptr = config.links; ptr; ++ptr)
+	for(decltype(config.links._ptr()) ptr = config.links; ptr; ++ptr)
 		++size;
 
 	pools.setup(size);
 
 	size_t i = 0;
 
-	for(typeof(config.links._ptr()) ptr = config.links; ptr; ++ptr)
+	for(decltype(config.links._ptr()) ptr = config.links; ptr; ++ptr)
 		ptr.val()->create(pools[i++], config.conn_timeout, config.remote_errors, proto);
 }
 

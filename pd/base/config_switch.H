@@ -143,14 +143,14 @@ protected:
 	) :
 		size(0), items(NULL) {
 
-		for(typeof(config_switch._ptr()) ptr = config_switch; ptr; ++ptr)
+		for(decltype(config_switch._ptr()) ptr = config_switch; ptr; ++ptr)
 			++size;
 
 		items = new item_t *[size];
 		item_t **p = items;
 
 		try {
-			for(typeof(config_switch._ptr()) ptr = config_switch; ptr; ++ptr)
+			for(decltype(config_switch._ptr()) ptr = config_switch; ptr; ++ptr)
 				*(p++) = new item_t(ptr.key(), ptr.val());
 		}
 		catch(...) {

@@ -111,7 +111,7 @@ void instance_t::recv_proc(bq_conn_t &conn) {
 		handler.send();
 	};
 
-	cleanup_t<typeof(cleanup_f)> cleanup(cleanup_f);
+	cleanup_t<decltype(cleanup_f)> cleanup(cleanup_f);
 
 	bq_in_t in(conn, proto.prms.ibuf_size, &stat.icount());
 	in_t::ptr_t ptr(in);
@@ -181,7 +181,7 @@ void instance_t::proc(bq_conn_t &conn) {
 		stat.send_tstate().set(send::connect);
 	};
 
-	cleanup_t<typeof(cleanup_f)> cleanup(cleanup_f);
+	cleanup_t<decltype(cleanup_f)> cleanup(cleanup_f);
 
 	log::handler_t handler(send_label);
 

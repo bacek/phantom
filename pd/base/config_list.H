@@ -109,7 +109,7 @@ public:
 	) :
 		size(0), items(NULL) {
 
-		for(typeof(config_list._ptr()) ptr = config_list; ptr; ++ptr)
+		for(decltype(config_list._ptr()) ptr = config_list; ptr; ++ptr)
 			++size;
 
 		items = new val_t[size];
@@ -117,7 +117,7 @@ public:
 		try {
 			val_t *p = items;
 
-			for(typeof(config_list._ptr()) ptr = config_list; ptr; ++ptr)
+			for(decltype(config_list._ptr()) ptr = config_list; ptr; ++ptr)
 				*(p++) = ptr.val();
 		}
 		catch(...) {
@@ -138,7 +138,7 @@ public:
 	) :
 		size(0), items(NULL) {
 
-		for(typeof(config_list._ptr()) ptr = config_list; ptr; ++ptr)
+		for(decltype(config_list._ptr()) ptr = config_list; ptr; ++ptr)
 			++size;
 
 		items = new val_t[size];
@@ -146,7 +146,7 @@ public:
 		try {
 			val_t *p = items;
 
-			for(typeof(config_list._ptr()) ptr = config_list; ptr; ++ptr)
+			for(decltype(config_list._ptr()) ptr = config_list; ptr; ++ptr)
 				*(p++) = cvt(ptr.val());
 		}
 		catch(...) {

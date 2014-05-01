@@ -72,7 +72,7 @@ public:
 	};
 
 	inline setup_stat_t(string_t const &, config_t const &config) throw() {
-		for(typeof(config.list._ptr()) ptr = config.list; ptr; ++ptr)
+		for(decltype(config.list._ptr()) ptr = config.list; ptr; ++ptr)
 			stat_label_t::create(ptr.val());
 	}
 };

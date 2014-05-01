@@ -56,7 +56,7 @@ public:
 		inline void check(in_t::ptr_t const &ptr) const {
 			links_t::config_t::check(ptr);
 
-			for(typeof(paths._ptr()) lptr = paths; lptr; ++lptr)
+			for(decltype(paths._ptr()) lptr = paths; lptr; ++lptr)
 				if(lptr.val().size() > netaddr_local_t::max_len())
 					config::error(ptr, "path is too long");
 		}

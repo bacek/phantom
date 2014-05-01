@@ -93,7 +93,7 @@ source_random_t::source_random_t(string_t const &name, config_t const &config) :
 
 	size_t size = 0;
 
-	for(typeof(config.headers._ptr()) ptr = config.headers; ptr; ++ptr)
+	for(decltype(config.headers._ptr()) ptr = config.headers; ptr; ++ptr)
 		size += (ptr.val().size() + 2);
 
 	size += 4;
@@ -102,7 +102,7 @@ source_random_t::source_random_t(string_t const &name, config_t const &config) :
 
 	ctor('\r')('\n');
 
-	for(typeof(config.headers._ptr()) ptr = config.headers; ptr; ++ptr)
+	for(decltype(config.headers._ptr()) ptr = config.headers; ptr; ++ptr)
 		ctor(ptr.val())('\r')('\n');
 
 	header = ctor('\r')('\n');

@@ -83,7 +83,7 @@ public:
 		inline void check(in_t::ptr_t const &ptr) const {
 			interval_t last = interval::zero;
 
-			for(typeof(values._ptr()) _ptr = values; _ptr; ++_ptr) {
+			for(decltype(values._ptr()) _ptr = values; _ptr; ++_ptr) {
 				interval_t t = _ptr.val();
 
 				if(t <= last)
@@ -104,7 +104,7 @@ public:
 		inline ctor_t(config_t const &_config) throw() :
 			config(_config), list_size() {
 
-			for(typeof(config.values._ptr()) ptr = config.values; ptr; ++ptr)
+			for(decltype(config.values._ptr()) ptr = config.values; ptr; ++ptr)
 				++list_size;
 		}
 
@@ -115,7 +115,7 @@ public:
 		virtual void fill(interval_t *_steps) const throw() {
 			size_t i = list_size;
 
-			for(typeof(config.values._ptr()) ptr = config.values; ptr; ++ptr)
+			for(decltype(config.values._ptr()) ptr = config.values; ptr; ++ptr)
 				_steps[--i] = ptr.val();
 		}
 	};

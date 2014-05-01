@@ -29,7 +29,7 @@ void io_t::do_exec() const {
 			::kill(::getpid(), SIGTERM);
 	};
 
-	cleanup_t<typeof(cleanup_f)> cleanup(cleanup_f);
+	cleanup_t<decltype(cleanup_f)> cleanup(cleanup_f);
 
 	run();
 }

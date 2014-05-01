@@ -56,7 +56,7 @@ file_types_list_t::file_types_list_t(string_t const &, config_t const &config) :
 
 	size_t size = 0;
 
-	for(typeof(config.list._ptr()) ptr = config.list; ptr; ++ptr)
+	for(decltype(config.list._ptr()) ptr = config.list; ptr; ++ptr)
 		++size;
 
 	if(!size)
@@ -66,7 +66,7 @@ file_types_list_t::file_types_list_t(string_t const &, config_t const &config) :
 
 	item_t *iptr = items;
 
-	for(typeof(config.list._ptr()) ptr = config.list; ptr; ++ptr) {
+	for(decltype(config.list._ptr()) ptr = config.list; ptr; ++ptr) {
 		string_t const &ext = ptr.key();
 		type_config_t const &config = ptr.val();
 

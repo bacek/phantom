@@ -36,7 +36,7 @@ public:
 	inline cond_handler_t(cond_t &_cond) : cond(_cond) { cond.lock(); }
 	inline ~cond_handler_t() throw() { cond.unlock(); }
 
-	inline auto wait(interval_t *timeout) -> typeof(cond.wait(timeout)) {
+	inline auto wait(interval_t *timeout) -> decltype(cond.wait(timeout)) {
 		return cond.wait(timeout);
 	}
 
