@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <type_traits>
+
 #include <pd/base/config_named_list.H>
 #include <pd/base/config_block.H>
 #include <pd/base/config_syntax.H>
@@ -453,7 +455,7 @@ typename binding_t<conf_t>::item_t *binding_t<conf_t>::list = NULL;
 	string_t config::binding_t<x_t::pref##_config_t>::sname(STRING("<" #x_t "::" #pref "_config>"))
 
 #define config_binding_value_(x_t, config_t, name) \
-static config::binding_t<x_t::config_t>::value_t<typeof(((x_t::config_t *)NULL)->*(&x_t::config_t::name))> \
+static config::binding_t<x_t::config_t>::value_t<std::remove_reference<decltype(((x_t::config_t *)NULL)->*(&x_t::config_t::name))>::type> \
 	config_binding_value_##name(STRING(#name), &x_t::config_t::name)
 
 #define config_binding_value(x_t, name) \

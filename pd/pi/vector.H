@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <type_traits>
+
 #include <pd/base/assert.H>
 
 #pragma GCC visibility push(default)
@@ -31,7 +33,7 @@ public:
 	template<typename _vector_t>
 	class _ptr_t {
 		static int nothing;
-		typedef typeof(((_vector_t *)&nothing)->items[0]) _x_t;
+		typedef typename std::remove_reference<decltype(((_vector_t *)&nothing)->items[0])>::type _x_t;
 		_x_t *ptr, *bound;
 
 	public:

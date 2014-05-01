@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <type_traits>
+
 #include <pd/base/config_block.H>
 #include <pd/base/config_syntax.H>
 
@@ -124,7 +126,7 @@ struct helper_t<record_t<val_t>> {
 	string_t config::record_t<val_t>::sname(STRING("<" #val_t ">"));
 
 #define config_record_value(val_t, name) \
-	static config::record_t<val_t>::value_t<typeof(((val_t *)NULL)->*(&val_t::name))> config_binding_value_rec_##name(&val_t::name);
+	static config::record_t<val_t>::value_t<std::remove_reference<decltype(((val_t *)NULL)->*(&val_t::name))>::type> config_binding_value_rec_##name(&val_t::name);
 
 }} // namespace pd::config
 
