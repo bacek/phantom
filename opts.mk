@@ -7,7 +7,7 @@ CC = gcc
 
 OPT ?= 3
 
-CXXSTD = -std=gnu++0x
+CXXSTD = -std=c++11
 
 define FIXZERODEPS
 $(subst %,/,$(1:.d=)): force_fixzerodeps
