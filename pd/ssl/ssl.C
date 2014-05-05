@@ -12,6 +12,7 @@
 
 #include <pd/base/exception.H>
 #include <pd/base/string_file.H>
+#include <pd/base/log.H>
 
 #include <pthread.h>
 #include <openssl/crypto.h>
@@ -101,6 +102,46 @@ public:
 	inline operator BIO *() { return val; }
 };
 
+// NPN negotiation helpers
+unsigned char* next_proto;
+unsigned int next_proto_len;
+
+int npn_next_proto_advertise_cb(SSL *s, const unsigned char **data, unsigned int *len, void *arg) {
+    (void)s;
+    (void)arg;
+    log_debug("npn_next_proto_advertise_cb");
+    *data = next_proto;
+    *len = next_proto_len;
+    return SSL_TLSEXT_ERR_OK;
+}
+
+int npn_next_proto_select_cb(SSL* ssl, unsigned char **out, unsigned char *outlen, const unsigned char *in, unsigned int inlen, void *arg) {
+    (void)ssl;
+    log_debug("npn_next_proto_select_cb");
+    ssl_ctx_t *self = static_cast<ssl_ctx_t*>(arg);
+
+    const unsigned char* p = in;
+    while(inlen) {
+        unsigned int slen = *p;
+        p++;
+        inlen -= 1 + slen;
+        for (unsigned int j = 0; j < self->next_protos.size; ++j) {
+            string_t &proto = self->next_protos[j];
+            if ((proto.size() == slen) && (memcmp(p, proto.ptr(), slen) == 0)) {
+                *out = (unsigned char*)(proto.ptr());
+                *outlen = slen;
+                self->negotiated_proto = proto;
+                MKCSTR(_p, self->negotiated_proto);
+                log_info("Negotiated NPN '%s'", _p);
+                return SSL_TLSEXT_ERR_OK;
+            }
+        }
+        p += slen;
+    }
+
+    return SSL_TLSEXT_ERR_NOACK;
+}
+
 } // namespace
 
 ssl_auth_t::ssl_auth_t(
@@ -117,8 +158,8 @@ ssl_auth_t::ssl_auth_t(
 ssl_auth_t::~ssl_auth_t() throw() { }
 
 ssl_ctx_t::ssl_ctx_t(
-	mode_t _mode, ssl_auth_t const *auth, string_t const &ciphers
-) : internal(NULL) {
+	mode_t _mode, ssl_auth_t const *auth, string_t const &ciphers, config::list_t<string_t> const& protos
+) : internal(NULL), next_protos(protos) {
 	SSL_CTX *ctx = SSL_CTX_new(
 		_mode == client ? SSLv23_client_method() : SSLv23_server_method()
 	);
@@ -215,6 +256,24 @@ ssl_ctx_t::ssl_ctx_t(
 			throw;
 		}
 	}
+
+    /* NPN setup */
+    if(next_protos.size) {
+        if(_mode == server) {
+            unsigned char* ptr = next_proto;
+            next_proto_len = 0;
+            for(size_t i = 0; i < next_protos.size; ++i) {
+                string_t const& str = next_protos[i];
+                next_proto_len += 1 + str.size();
+                *ptr++ = (uint8_t)str.size();
+                memcpy(ptr, str.ptr(), str.size());
+            }
+            SSL_CTX_set_next_protos_advertised_cb(ctx, npn_next_proto_advertise_cb, this);
+        }
+        else {
+            SSL_CTX_set_next_proto_select_cb(ctx, npn_next_proto_select_cb, this);
+        }
+    }
 
 	internal = ctx;
 }

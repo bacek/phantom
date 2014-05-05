@@ -7,6 +7,7 @@
 #pragma once
 
 #include <pd/base/string.H>
+#include <pd/base/config_list.H>
 
 #pragma GCC visibility push(default)
 
@@ -29,9 +30,11 @@ public:
 class ssl_ctx_t {
 public:
 	void *internal;
+    sarray1_t<string_t> next_protos;
+    string_t negotiated_proto;
 	enum mode_t { client, server };
 
-	ssl_ctx_t(mode_t _mode, ssl_auth_t const *auth, string_t const &ciphers);
+	ssl_ctx_t(mode_t _mode, ssl_auth_t const *auth, string_t const &ciphers, config::list_t<string_t> const &protos);
 
 	~ssl_ctx_t() throw();
 
