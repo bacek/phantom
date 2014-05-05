@@ -11,6 +11,7 @@
 #include <pd/ssl/bq_conn_ssl.H>
 
 #include <pd/base/config.H>
+#include <pd/base/config_list.H>
 #include <pd/base/fd.H>
 #include <pd/base/exception.H>
 
@@ -36,8 +37,9 @@ public:
 		config::objptr_t<auth_t> auth;
 		string_t ciphers;
 		interval_t timeout;
+        config::list_t<string_t> protos;
 
-		inline config_t() throw() : auth(), ciphers(), timeout(interval::second) { }
+		inline config_t() throw() : auth(), ciphers(), timeout(interval::second), protos() { }
 		inline ~config_t() throw() { }
 
 		inline void check(in_t::ptr_t const &ptr) const {
@@ -47,7 +49,7 @@ public:
 	};
 
 	inline transport_ssl_t(string_t const &, config_t const &config) throw() :
-		ctx(ssl_ctx_t::server, config.auth, config.ciphers),
+		ctx(ssl_ctx_t::server, config.auth, config.ciphers, config.protos),
 		timeout(config.timeout) { }
 
 	inline ~transport_ssl_t() throw() { }
@@ -59,6 +61,7 @@ config_binding_type(transport_ssl_t, auth_t);
 config_binding_value(transport_ssl_t, auth);
 config_binding_value(transport_ssl_t, ciphers);
 config_binding_value(transport_ssl_t, timeout);
+config_binding_value(transport_ssl_t, protos);
 config_binding_cast(transport_ssl_t, transport_t);
 config_binding_ctor(transport_t, transport_ssl_t);
 }
